@@ -1,7 +1,7 @@
 library(tidyverse)
 
 # ── 1. Load & clean ──────────────────────────────────────────────────────────
-df <- read_delim("data/updated_far_right_parties.csv", delim = ";", show_col_types = FALSE) |>
+df <- read_delim("data/full_data.csv", delim = ";", show_col_types = FALSE) |>
   mutate(
     vote_share    = as.numeric(vote_share),
     election_date = as.Date(election_date)
@@ -123,50 +123,19 @@ p <- ggplot(df_stacked) +
   )
 
 ggsave(
-  "visuals/stacked_bar1.svg", p,
+  "visuals/stacked_bar.svg", p,
   width  = ncols * 3,
   height = nrows * 2.6,
   units  = "in"
 )
 
-message("Saved → stacked_bar1.svg")
+message("Saved → stacked_bar.svg")
 
 # save as a png too
 ggsave(
-  "visuals/stacked_bar1.png", p,
+  "visuals/stacked_bar.png", p,
   width  = ncols * 3,
   height = nrows * 2.6,
   units  = "in"
 )
-message("Saved → stacked_bar1.png")
-
-
-
-# create a dot plot with election year on the x-axes and sum of vote share for far right parties on the y. Each dot is an election
-
-df_far_right <- df %>%
-  filter(far_right == "far-right") %>%
-  group_by(country_name, election_year) %>%
-  summarise(vote_share = sum(vote_share), .groups = "drop")
-
-# define the size and color of the points
-point_size <- 3
-point_color <- "#FF0000"  # red color for far-right parties
-
-ggplot(df_far_right, aes(y = election_year, x = vote_share)) +
-  geom_point(size = point_size, colour = point_color) +
-  labs(
-    title = "Far-right party vote share in national elections",
-    x = "Vote share",
-    y = "Election year"
-  ) +
-  theme_minimal()
-
-# save the plot as an svg file
-ggsave(
-  "visuals/dot_plot_far_right.svg",
-  width  = ncols * 3.4,
-  height = nrows * 2.6,
-  units  = "in"
-)
-message("Saved → dot_plot_far_right.svg")
+message("Saved → stacked_bar.png")
